@@ -59,7 +59,7 @@ export const Drag1 = () => {
 
     return (
         <div className="app">
-            <ul className="list" onDragOver={handleDragOver}>
+            <ul className="list">
                 {dataList.map((val, idx) => {
                     return (
                         <li
