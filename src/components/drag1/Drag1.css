@@ -1,11 +1,4 @@
-.app {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: row;
-}
-
-.list {
+ul {
     display: flex;
     flex-direction: column;
     width: auto;
@@ -15,7 +8,7 @@
     border-radius: 8px;
 }
 
-.item {
+li {
     width: 50px;
     height: 50px;
     text-align: center;

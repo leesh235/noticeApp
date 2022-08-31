@@ -58,27 +58,24 @@ export const Drag1 = () => {
     useEffect(() => {}, []);
 
     return (
-        <div className="app">
-            <ul className="list">
-                {dataList.map((val, idx) => {
-                    return (
-                        <li
-                            className="draggable item"
-                            key={idx}
-                            data-index={idx}
-                            draggable="true"
-                            onDragStart={handleDragStart}
-                            onDragOver={handleDragOver}
-                            onDragLeave={handleDragLeave}
-                            onDrop={handleDrop}
-                            onDragEnter={handleDragEnter}
-                            onDragEnd={handleDragEnd}
-                        >
-                            {val}
-                        </li>
-                    );
-                })}
-            </ul>
-        </div>
+        <ul className="list">
+            {dataList.map((val, idx) => {
+                return (
+                    <li
+                        key={idx}
+                        data-index={idx}
+                        draggable="true"
+                        onDragStart={handleDragStart}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        onDragEnter={handleDragEnter}
+                        onDragEnd={handleDragEnd}
+                    >
+                        {val}
+                    </li>
+                );
+            })}
+        </ul>
     );
 };
