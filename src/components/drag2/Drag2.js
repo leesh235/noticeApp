@@ -1,5 +1,5 @@
 import "./Drag2.css";
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, HTMLElement } from "react";
 
 /**
  *  drag and drop
@@ -22,53 +22,57 @@ import { useRef, useState, useEffect } from "react";
 export const Drag2 = () => {
     const [dataList, setDataList] = useState([1, 2, 3, 4, 5, 6, 7, 8]);
 
-    const dragItem = useRef(null);
+    const dndItem = useRef({
+        dragItem: null,
+        targetItem: null,
+        updateList: [],
+    });
 
-    const handleDragOver = (e) => {
-        e.preventDefault();
-        console.log(e.dataTransfer.getData("dragItem"));
-    };
-
+    //드래그가 시작될 때
     const handleDragStart = (e) => {
-        dragItem.current = Number(e.target.id);
-        e.dataTransfer.effectAllowed = "move";
-        // e.dataTransfer.setData("dragItem", e.target.id);
+        dndItem.current.dragItem = Number(e.target.id);
         e.target.classList.add("grabbing");
     };
 
-    const handleDrop = (e) => {
-        const dragedItem = dragItem.current;
+    //드래그가 끝날 때
+    const handleDragEnd = (e) => {
+        if (dndItem.current.updateList.length === 0) return;
+        setDataList(dndItem.current.updateList);
+
+        dndItem.current.dragItem = null;
+        dndItem.current.targetItem = null;
+        dndItem.current.updateList = [];
+    };
+
+    //드랍될 영역위에 위치하고 있을 때(ms)
+    const handleDragOver = (e) => {
+        e.preventDefault();
+    };
+
+    //해당 위치에 드랍될 때
+    const handleDrop = (e) => {};
+
+    //드랍될 영역에 들어왔을 때
+    const handleDragEnter = (e) => {
+        if (dndItem.current.dragItem === Number(e.target.id)) return;
+        dndItem.current.targetItem = Number(e.target.id);
+
+        const dragItem = dndItem.current.dragItem;
         const targetItem = Number(e.target.id);
 
-        const filterList = dataList.filter((val, idx) => idx !== dragedItem);
+        const filterList = dataList.filter((val, idx) => idx !== dragItem);
 
         const newList = [
             ...filterList.slice(0, targetItem),
-            dataList[dragedItem],
+            dataList[dragItem],
             ...filterList.slice(targetItem),
         ];
 
-        setDataList(newList);
+        dndItem.current.updateList = newList;
     };
 
-    const handleDragEnd = (e) => {
-        e.target.dataTransfer.dropEffect = "move";
-        e.target.classList.remove("grabbing");
-        dragItem.current = null;
-    };
-
-    const handleDragEnter = (e) => {
-        console.log(e.target.id);
-        if (Number(e.target.id) > dragItem.current)
-            e.target.classList.add("move_up");
-        else if (Number(e.target.id) < dragItem.current)
-            e.target.classList.add("move_down");
-    };
-
-    const handleDragLeave = (e) => {
-        e.target.classList.remove("move_up");
-        e.target.classList.remove("move_down");
-    };
+    //드랍될 영역을 벗어났을 때
+    const handleDragLeave = (e) => {};
 
     useEffect(() => {}, []);
 
@@ -78,7 +82,7 @@ export const Drag2 = () => {
                 return (
                     <li
                         id={idx}
-                        className="draggable item"
+                        className="item"
                         key={idx}
                         draggable="true"
                         onDragStart={handleDragStart}
