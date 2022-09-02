@@ -18,30 +18,40 @@ import { useState, useRef, useEffect } from "react";
  * -dataTransfer
  * dnd 작업 중에 드래그되는 데이터를 유지하는데 사용
  */
-export const useDnd = ({ initList = [] }) => {
+export const useDnd = ({
+    initList = { todos: [], progress: [], completed: [] },
+}) => {
     const draggable = true;
     const [updateList, setUpdateList] = useState(initList);
 
     const dndItem = useRef({
         dragItem: null,
         targetItem: null,
-        updateList: [],
+        updateList: { todos: [], progress: [], completed: [] },
+    });
+
+    const dndParent = useRef({
+        dragParent: null,
+        targetParent: null,
     });
 
     //드래그가 시작될 때
     const onDragStart = (e) => {
         dndItem.current.dragItem = Number(e.target.id);
+        dndParent.current.dragParent = e.target.parentElement;
         e.target.classList.add("grabbing");
     };
 
     //드래그가 끝날 때
     const onDragEnd = (e) => {
-        if (dndItem.current.updateList.length === 0) return;
+        if (dndItem.current.updateList[e.target.parentElement.id].length === 0)
+            return;
         setUpdateList(dndItem.current.updateList);
 
         dndItem.current.dragItem = null;
         dndItem.current.targetItem = null;
-        dndItem.current.updateList = [];
+        dndItem.current.updateList = { todos: [], progress: [], completed: [] };
+        dndParent.current.dragParent = null;
 
         e.target.classList.remove("grabbing");
     };
@@ -52,29 +62,66 @@ export const useDnd = ({ initList = [] }) => {
     };
 
     //해당 위치에 드랍될 때
-    const onDrop = (e) => {};
+    const onDrop = (e) => {
+        console.log(e.target);
+    };
 
     //드랍될 영역에 들어왔을 때
     const onDragEnter = (e) => {
-        if (dndItem.current.dragItem === Number(e.target.id)) return;
-        dndItem.current.targetItem = Number(e.target.id);
+        if (
+            e.target.parentElement === dndParent.current.dragParent &&
+            dndItem.current.dragItem === Number(e.target.id)
+        )
+            return;
 
+        const diffParent = e.target.parentElement;
+        const myParent = dndParent.current.dragParent;
         const dragItem = dndItem.current.dragItem;
         const targetItem = Number(e.target.id);
+        let newList = { todos: [], progress: [], completed: [] };
 
-        const filterList = updateList.filter((val, idx) => idx !== dragItem);
+        const filterList = updateList[myParent.id].filter(
+            (val, idx) => idx !== dragItem
+        );
 
-        const newList = [
-            ...filterList.slice(0, targetItem),
-            updateList[dragItem],
-            ...filterList.slice(targetItem),
-        ];
+        if (diffParent === myParent) {
+            dndItem.current.targetItem = Number(e.target.id);
+            newList = {
+                ...updateList,
+                [myParent.id]: [
+                    ...filterList.slice(0, targetItem),
+                    updateList[myParent.id][dragItem],
+                    ...filterList.slice(targetItem),
+                ],
+            };
+        } else {
+            const difffilterList = updateList[diffParent.id].filter(
+                (val, idx) => idx !== targetItem
+            );
 
+            newList = {
+                ...updateList,
+                [myParent.id]: [
+                    ...filterList.slice(0, dragItem),
+                    updateList[diffParent.id][targetItem],
+                    ...filterList.slice(dragItem),
+                ],
+                [diffParent.id]: [
+                    ...difffilterList.slice(0, targetItem),
+                    updateList[myParent.id][dragItem],
+                    ...difffilterList.slice(targetItem),
+                ],
+            };
+        }
         dndItem.current.updateList = newList;
     };
 
     //드랍될 영역을 벗어났을 때
-    const onDragLeave = (e) => {};
+    const onDragLeave = (e) => {
+        //드래그로 영역에 들어갔다 빈공간에 drop했을때 updatelist가 반영되는거 방지
+        //문제: 아이템의 margin이 0일때 drag item enter -> target item enter -> drag item leave 순으로 발생하여 updatelist가 반영되지않음
+        dndItem.current.updateList = updateList;
+    };
 
     useEffect(() => {}, []);
 

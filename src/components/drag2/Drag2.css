@@ -15,6 +15,7 @@
     cursor: pointer;
     border-radius: 8px;
     background-color: aquamarine;
+    margin: 10px;
 }
 
 .grabbing {
