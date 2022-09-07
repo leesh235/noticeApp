@@ -1,7 +1,6 @@
 import "./App.css";
-import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { routes } from "./route";
+import { routes } from "./utils/route";
 import Home from "./pages/home/Home";
 
 export default function App() {
