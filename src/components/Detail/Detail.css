@@ -1,0 +1,63 @@
+.modal {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(
+        128,
+        128,
+        128,
+        0.3
+    ); /*opacity는 하위 컨텐츠에 상속되는데 이렇게 하면 방지할 수 있다.*/
+    margin: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.box {
+    width: 60%;
+    height: 70%;
+    background-color: white;
+    display: grid;
+    grid-template-rows: 20% 80%;
+}
+
+#top {
+    display: grid;
+    grid-template-columns: 95% 5%;
+    grid-template-rows: repeat(4, 1fr);
+    border-bottom: 1px solid gray;
+    padding: 20px;
+}
+
+#top > :nth-child(1) {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+}
+
+#top > :nth-child(2) {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+}
+
+#top > :nth-child(3) {
+    grid-row: 3 / 4;
+    grid-column: 1 / 2;
+}
+
+#top > :nth-child(4) {
+    grid-row: 4 / 5;
+    grid-column: 1 / 2;
+}
+
+#top > :nth-child(5) {
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+    cursor: pointer;
+}
+
+#contents {
+    padding: 20px;
+}
