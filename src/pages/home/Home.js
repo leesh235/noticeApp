@@ -3,16 +3,16 @@ import { useState, useEffect } from "react";
 import { useDnd } from "../../hooks/useDnd";
 import { Detail } from "../../components/Detail/Detail";
 import { Add } from "../../components/add/Add";
+import { useSelector, useDispatch } from "react-redux";
+import { getListAction } from "../../modules/action/list";
 
 const lists = ["todos", "progress", "complete"];
 const titles = ["할일", "진행중", "완료"];
 
 export default function Home() {
-    const [dataList, setDataList] = useState({
-        todos: [1, 2, 3, 4, 5, 6],
-        progress: [7, 8, 9, 10, 11, 12],
-        complete: [13, 14, 15, 16, 17, 18],
-    });
+    const dispatch = useDispatch();
+    const dataList = useSelector((state) => state.list);
+
     const [pageModal, setPageModal] = useState(false);
     const [addModal, setAddModal] = useState(false);
     const [id, setId] = useState(null);
@@ -24,7 +24,7 @@ export default function Home() {
     const _addList = (e) => {
         setAddModal(true);
         console.log(e.currentTarget);
-        console.log(e.currentTarget.parentElement.parentElement);
+        console.log(e.currentTarget.parentElement.parentElement.id);
     };
 
     const _openPage = (e) => {
@@ -33,7 +33,7 @@ export default function Home() {
     };
 
     useEffect(() => {
-        setDataList(updateList);
+        dispatch(getListAction(updateList));
     }, [updateList]);
 
     return (
