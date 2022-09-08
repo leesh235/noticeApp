@@ -8,15 +8,14 @@ const initState = {
 
 const reducer = (state = initState, action) => {
     const { type, data } = action;
+    console.log(data);
     switch (type) {
         case GETLIST:
             return data;
         case ADDLIST:
             return {
                 ...state,
-                [data.parent]: {
-                    ...data.post,
-                },
+                [data.parent]: [...state[data.parent], data.post],
             };
         default:
             return state;

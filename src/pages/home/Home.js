@@ -15,6 +15,7 @@ export default function Home() {
 
     const [pageModal, setPageModal] = useState(false);
     const [addModal, setAddModal] = useState(false);
+    const [parent, setParent] = useState("");
     const [id, setId] = useState(null);
 
     const { updateList, attribute } = useDnd({
@@ -23,8 +24,7 @@ export default function Home() {
 
     const _addList = (e) => {
         setAddModal(true);
-        console.log(e.currentTarget);
-        console.log(e.currentTarget.parentElement.parentElement.id);
+        setParent(e.currentTarget.parentElement.parentElement.id);
     };
 
     const _openPage = (e) => {
@@ -73,6 +73,7 @@ export default function Home() {
             )}
             {addModal && (
                 <Add
+                    parent={parent}
                     closeFunc={() => {
                         setAddModal(false);
                     }}
