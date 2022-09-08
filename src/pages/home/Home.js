@@ -29,7 +29,7 @@ export default function Home() {
 
     const _openPage = (e) => {
         setPageModal(true);
-        setId(Number(e.currentTarget.parentElement.dataset.value));
+        setId(Number(e.currentTarget.dataset.value));
     };
 
     useEffect(() => {
@@ -53,11 +53,9 @@ export default function Home() {
                                         key={idx}
                                         {...attribute}
                                         data-value={val}
+                                        onClick={_openPage}
                                     >
-                                        <div></div>
-                                        <div data-id={idx} onClick={_openPage}>
-                                            {val}
-                                        </div>
+                                        {val}
                                     </li>
                                 );
                             })}
