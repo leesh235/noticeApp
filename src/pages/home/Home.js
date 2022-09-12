@@ -1,8 +1,7 @@
 import "./Home.css";
 import { useState, useEffect } from "react";
 import { useDnd } from "../../hooks/useDnd";
-import { Detail } from "../../components/Detail/Detail";
-import { Add } from "../../components/add/Add";
+import { Detail } from "../../components/detail/Detail";
 import { useSelector, useDispatch } from "react-redux";
 import { getListAction } from "../../modules/action/list";
 
@@ -14,7 +13,6 @@ export default function Home() {
     const dataList = useSelector((state) => state.list);
 
     const [pageModal, setPageModal] = useState(false);
-    const [addModal, setAddModal] = useState(false);
     const [parent, setParent] = useState("");
     const [id, setId] = useState(null);
 
@@ -22,14 +20,10 @@ export default function Home() {
         initList: { ...dataList },
     });
 
-    const _addList = (e) => {
-        setAddModal(true);
-        setParent(e.currentTarget.parentElement.parentElement.id);
-    };
-
     const _openPage = (e) => {
         setPageModal(true);
         setId(Number(e.currentTarget.dataset.value));
+        setParent(e.currentTarget.parentElement.parentElement.id);
     };
 
     useEffect(() => {
@@ -44,7 +38,7 @@ export default function Home() {
                         <ul key={idx} id={val} className="list">
                             <div className="title">
                                 <div>{titles[idx]}</div>
-                                <div onClick={_addList}>+</div>
+                                <div onClick={_openPage}>+</div>
                             </div>
                             {dataList[val]?.map((val, idx) => {
                                 return (
@@ -66,16 +60,9 @@ export default function Home() {
             {pageModal && (
                 <Detail
                     id={id}
-                    closeFunc={() => {
-                        setPageModal(false);
-                    }}
-                />
-            )}
-            {addModal && (
-                <Add
                     parent={parent}
                     closeFunc={() => {
-                        setAddModal(false);
+                        setPageModal(false);
                     }}
                 />
             )}
