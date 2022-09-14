@@ -1,14 +1,14 @@
-import { GETLIST, ADDLIST } from "../action/list";
+import { db } from "../../utils/db";
+import { GETLIST, ADDLIST, PUTDETAIL } from "../action/list";
 
 const initState = {
-    todos: [1, 2, 3, 4, 5, 6],
-    progress: [7, 8, 9, 10, 11, 12],
-    complete: [13, 14, 15, 16, 17, 18],
+    todos: db.notice.todos,
+    progress: db.notice.progress,
+    complete: db.notice.complete,
 };
 
 const reducer = (state = initState, action) => {
     const { type, data } = action;
-    console.log(data);
     switch (type) {
         case GETLIST:
             return data;
@@ -16,6 +16,15 @@ const reducer = (state = initState, action) => {
             return {
                 ...state,
                 [data.parent]: [...state[data.parent], data.post],
+            };
+        case PUTDETAIL:
+            const newList = state[data.parent].map((val, idx) => {
+                if (val.id === data.detail.id) return { ...data.detail };
+                else return { ...val };
+            });
+            return {
+                ...state,
+                [data.parent]: [...newList],
             };
         default:
             return state;
