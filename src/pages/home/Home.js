@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useDnd } from "../../hooks/useDnd";
 import { Detail } from "../../components/detail/Detail";
 import { useSelector, useDispatch } from "react-redux";
-import { getListAction } from "../../modules/action/list";
+import { getListAction, addListAction } from "../../modules/action/list";
 
 const lists = ["todos", "progress", "complete"];
 const titles = ["할일", "진행중", "완료"];
@@ -13,17 +13,39 @@ export default function Home() {
     const dataList = useSelector((state) => state.list);
 
     const [pageModal, setPageModal] = useState(false);
-    const [parent, setParent] = useState("");
-    const [id, setId] = useState(null);
+    const [info, setInfo] = useState({ id: null, parent: "" });
 
     const { updateList, attribute } = useDnd({
         initList: { ...dataList },
     });
 
-    const _openPage = (e) => {
+    const _openPage = (e, mode, parent) => {
+        if (mode === "add") {
+            dispatch(
+                addListAction({
+                    parent,
+                    post: {
+                        id:
+                            dataList[parent][dataList[parent].length - 1].id +
+                            1,
+                        title: `제목없음`,
+                        writer: `user1`,
+                        createAt: `YYYY-MM-DD`,
+                        modifyAt: ``,
+                    },
+                })
+            );
+            setInfo({
+                id: dataList[parent][dataList[parent].length - 1].id + 1,
+                parent,
+            });
+        } else {
+            setInfo({
+                id: Number(e.currentTarget.id),
+                parent,
+            });
+        }
         setPageModal(true);
-        setId(Number(e.currentTarget.dataset.value));
-        setParent(e.currentTarget.parentElement.parentElement.id);
     };
 
     useEffect(() => {
@@ -33,23 +55,31 @@ export default function Home() {
     return (
         <>
             <main>
-                {lists.map((val, idx) => {
+                {lists?.map((parent, idx) => {
                     return (
-                        <ul key={idx} id={val} className="list">
+                        <ul key={idx} id={parent} className="list">
                             <div className="title">
                                 <div>{titles[idx]}</div>
-                                <div onClick={_openPage}>+</div>
+                                <div
+                                    onClick={(e) => {
+                                        _openPage(e, "add", parent);
+                                    }}
+                                >
+                                    +
+                                </div>
                             </div>
-                            {dataList[val]?.map((val, idx) => {
+                            {dataList[parent]?.map((val) => {
                                 return (
                                     <li
-                                        id={idx}
-                                        key={idx}
+                                        id={val.id}
+                                        key={val.id}
                                         {...attribute}
-                                        data-value={val}
-                                        onClick={_openPage}
+                                        data-value={val.id}
+                                        onClick={(e) => {
+                                            _openPage(e, "open", parent);
+                                        }}
                                     >
-                                        {val}
+                                        {val.title}
                                     </li>
                                 );
                             })}
@@ -59,8 +89,8 @@ export default function Home() {
             </main>
             {pageModal && (
                 <Detail
-                    id={id}
-                    parent={parent}
+                    id={info.id}
+                    parent={info.parent}
                     closeFunc={() => {
                         setPageModal(false);
                     }}

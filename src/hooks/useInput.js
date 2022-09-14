@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export const useInput = (initValue = "") => {
-    const [value, setValue] = useState(initValue);
+    const [defaultValue, setValue] = useState(initValue);
 
-    const onInput = (e) => {
+    const onChange = (e) => {
+        console.log(e.target.value);
         setValue(e.target.value);
     };
 
-    useEffect(() => {}, [value]);
-
-    return { value, onInput };
+    return { defaultValue, onChange };
 };
