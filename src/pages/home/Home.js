@@ -41,7 +41,7 @@ export default function Home() {
             });
         } else {
             setInfo({
-                id: Number(e.currentTarget.id),
+                id: Number(e.currentTarget.dataset.id),
                 parent,
             });
         }
@@ -68,16 +68,17 @@ export default function Home() {
                                     +
                                 </div>
                             </div>
-                            {dataList[parent]?.map((val) => {
+                            {dataList[parent]?.map((val, idx) => {
                                 return (
                                     <li
-                                        id={val.id}
+                                        id={idx}
                                         key={val.id}
                                         {...attribute}
                                         data-value={val.id}
                                         onClick={(e) => {
                                             _openPage(e, "open", parent);
                                         }}
+                                        data-id={val.id}
                                     >
                                         {val.title}
                                     </li>

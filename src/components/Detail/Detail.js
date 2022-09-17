@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { putDetailAction } from "../../modules/action/list";
 import { useDebounce } from "../../hooks/useDebounce";
+import { Editor } from "../editor/Editor";
 
 export const Detail = ({ id, parent, closeFunc }) => {
     const detail = useSelector((state) => {
@@ -50,7 +51,7 @@ export const Detail = ({ id, parent, closeFunc }) => {
                     <div onClick={closeFunc}>X</div>
                 </section>
                 <section id="contents">
-                    <input />
+                    <Editor />
                 </section>
             </div>
         </article>
