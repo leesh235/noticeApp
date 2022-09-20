@@ -50,9 +50,7 @@ export const Detail = ({ id, parent, closeFunc }) => {
                     <div>수정일: {detail?.modifyAt}</div>
                     <div onClick={closeFunc}>X</div>
                 </section>
-                <section id="contents">
-                    <Editor />
-                </section>
+                <Editor />
             </div>
         </article>
     );

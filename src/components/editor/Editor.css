@@ -1,26 +1,56 @@
-#input_cont {
+#editor {
+    padding: 20px;
     width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.line_wrapper {
+    width: 100%;
+    min-height: 30px;
     height: auto;
     display: flex;
 }
 
-#control_btn {
+.dnd_btn {
     width: 20px;
-    height: 20px;
+    height: 80%;
     border-radius: 6px;
     cursor: pointer;
-    position: relative;
-    z-index: 9;
 }
 
-#control_btn:hover {
+.dnd_btn:hover {
     background-color: rgba(128, 128, 128, 0.4);
 }
 
-#type_menu {
+.input_type_btn {
+    width: 20px;
+    height: 80%;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.input_type_btn:hover {
+    background-color: rgba(128, 128, 128, 0.4);
+}
+
+.input_type_menu {
     position: absolute;
     bottom: 20px;
     background-color: white;
     width: 50px;
     height: 50px;
+}
+
+.input_type_item {
+    cursor: pointer;
+}
+
+.input_type {
+    width: calc(100% - 60px);
+    min-height: 100%;
+    /* outline: none; */
+    line-height: 30px;
 }
