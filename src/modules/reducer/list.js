@@ -1,5 +1,5 @@
 import { db } from "../../utils/db";
-import { GETLIST, ADDLIST, PUTDETAIL } from "../action/list";
+import { GETLIST, ADDLIST } from "../action/list";
 
 const initState = {
     todos: db.notice.todos,
@@ -16,15 +16,6 @@ const reducer = (state = initState, action) => {
             return {
                 ...state,
                 [data.parent]: [...state[data.parent], data.post],
-            };
-        case PUTDETAIL:
-            const newList = state[data.parent].map((val, idx) => {
-                if (val.id === data.detail.id) return { ...data.detail };
-                else return { ...val };
-            });
-            return {
-                ...state,
-                [data.parent]: [...newList],
             };
         default:
             return state;
