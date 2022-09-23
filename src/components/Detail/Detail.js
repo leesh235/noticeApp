@@ -1,37 +1,44 @@
 import "./Detail.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { putDetailAction } from "../../modules/action/list";
+import { putDetailAction } from "../../modules/action/detail";
+import { getDetailAction } from "../../modules/action/detail";
 import { useDebounce } from "../../hooks/useDebounce";
 import { Editor } from "../editor/Editor";
 
 export const Detail = ({ id, parent, closeFunc }) => {
-    const detail = useSelector((state) => {
-        return state.list?.[parent].filter((val) => {
-            return val.id === id;
-        })[0];
+    const title = useSelector((state) => {
+        return state.detail[id]?.title;
+    });
+    const writer = useSelector((state) => {
+        return state.detail[id]?.writer;
+    });
+    const createAt = useSelector((state) => {
+        return state.detail[id]?.createAt;
+    });
+    const modifyAt = useSelector((state) => {
+        return state.detail[id]?.modifyAt;
     });
 
     const dispatch = useDispatch();
 
     const { handler } = useDebounce(2000);
 
-    useEffect(() => {}, []);
-
     const _onChange = (e) => {
         handler(() =>
             dispatch(
                 putDetailAction({
-                    parent,
-                    detail: {
-                        ...detail,
-                        [e.target.name]: e.target.value,
-                        modifyAt: `yy`,
-                    },
+                    id,
+                    [e.target.name]: e.target.value,
+                    modifyAt: `yy`,
                 })
             )
         );
     };
+
+    useEffect(() => {
+        dispatch(getDetailAction({ id }));
+    }, []);
 
     return (
         <article className="modal">
@@ -41,16 +48,17 @@ export const Detail = ({ id, parent, closeFunc }) => {
                         <label htmlFor="title">제목:</label>
                         <input
                             name="title"
-                            defaultValue={detail?.title || "제목없음"}
+                            defaultValue={title}
+                            placeholder={"제목없음"}
                             onChange={_onChange}
                         />
                     </div>
-                    <div>작성자: {detail?.writer}</div>
-                    <div>작성일: {detail?.createAt}</div>
-                    <div>수정일: {detail?.modifyAt}</div>
+                    <div>작성자: {writer}</div>
+                    <div>작성일: {createAt}</div>
+                    <div>수정일: {modifyAt}</div>
                     <div onClick={closeFunc}>X</div>
                 </section>
-                <Editor />
+                <Editor id={id} parent={parent} />
             </div>
         </article>
     );
