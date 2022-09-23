@@ -1,0 +1,50 @@
+.line_wrapper {
+    width: 100%;
+    min-height: 30px;
+    height: auto;
+    display: flex;
+    position: relative;
+}
+
+.dnd_btn {
+    width: 20px;
+    height: 25px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.dnd_btn:hover {
+    background-color: rgba(128, 128, 128, 0.4);
+}
+
+.input_menu_btn {
+    width: 20px;
+    height: 25px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.input_menu_btn:hover {
+    background-color: rgba(128, 128, 128, 0.4);
+}
+
+.input_menu {
+    position: absolute;
+    bottom: 20px;
+    background-color: white;
+    width: 50px;
+    height: 50px;
+}
+
+.input_item {
+    cursor: pointer;
+}
+
+.custom_input {
+    width: calc(100% - 60px);
+    width: 100%;
+    min-height: 30px;
+    /* outline: none; */
+    line-height: 30px;
+    background-color: beige;
+}
