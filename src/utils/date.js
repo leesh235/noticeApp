@@ -1,3 +1,5 @@
+const today = new Date();
+
 export const currnetDate = () => {
-    return new Date();
+    return `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
 };
