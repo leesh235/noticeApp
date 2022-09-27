@@ -1,12 +1,15 @@
 import { useEffect, useState, useRef } from "react";
 import "./InputController.css";
 import { useDispatch } from "react-redux";
-import { putDetailAction } from "../../../modules/action/detail";
+import {
+    addContentsAction,
+    putContentsAction,
+} from "../../../modules/action/contents";
 import { useDebounce } from "../../../hooks/useDebounce";
 
 const menuList = ["기본", "할일", "리스트"];
 
-export const InputController = ({ detailId, value, isLast, currFocus }) => {
+export const InputController = ({ noticeId, value, isLast, currFocus }) => {
     const dispatch = useDispatch();
     const focusRef = useRef(null);
     const { handler } = useDebounce(500);
@@ -31,10 +34,8 @@ export const InputController = ({ detailId, value, isLast, currFocus }) => {
         else if (e.key === "Enter") {
             handler(() => {
                 dispatch(
-                    putDetailAction({
-                        id: detailId,
-                        contentId: value.id,
-                        value: "",
+                    addContentsAction({
+                        noticeId,
                     })
                 );
             });
@@ -43,13 +44,11 @@ export const InputController = ({ detailId, value, isLast, currFocus }) => {
     };
 
     const _onInput = (e) => {
-        console.log(e.currentTarget?.innerText);
         const { innerText } = e.currentTarget;
         handler(() => {
             dispatch(
-                putDetailAction({
-                    id: detailId,
-                    contentId: value.id,
+                putContentsAction({
+                    id: value.id,
                     value: innerText,
                 })
             );

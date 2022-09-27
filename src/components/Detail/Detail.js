@@ -3,26 +3,18 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { putDetailAction } from "../../modules/action/detail";
 import { getDetailAction } from "../../modules/action/detail";
+import { getContentsAction } from "../../modules/action/contents";
 import { useDebounce } from "../../hooks/useDebounce";
 import { Editor } from "../editor/Editor";
+import { currnetDate } from "../../utils/date";
 
 export const Detail = ({ id, parent, closeFunc }) => {
-    const title = useSelector((state) => {
-        return state.detail[id]?.title;
-    });
-    const writer = useSelector((state) => {
-        return state.detail[id]?.writer;
-    });
-    const createAt = useSelector((state) => {
-        return state.detail[id]?.createAt;
-    });
-    const modifyAt = useSelector((state) => {
-        return state.detail[id]?.modifyAt;
-    });
-
     const dispatch = useDispatch();
-
     const { handler } = useDebounce(2000);
+
+    const detail = useSelector((state) => {
+        return state.detail[id];
+    });
 
     const _onChange = (e) => {
         handler(() =>
@@ -30,13 +22,14 @@ export const Detail = ({ id, parent, closeFunc }) => {
                 putDetailAction({
                     id,
                     [e.target.name]: e.target.value,
-                    modifyAt: `yy`,
+                    modifyAt: `${currnetDate()}`,
                 })
             )
         );
     };
 
     useEffect(() => {
+        dispatch(getContentsAction({ noticeId: id }));
         dispatch(getDetailAction({ id }));
     }, []);
 
@@ -48,17 +41,17 @@ export const Detail = ({ id, parent, closeFunc }) => {
                         <label htmlFor="title">제목:</label>
                         <input
                             name="title"
-                            defaultValue={title}
+                            defaultValue={detail?.title}
                             placeholder={"제목없음"}
                             onChange={_onChange}
                         />
                     </div>
-                    <div>작성자: {writer}</div>
-                    <div>작성일: {createAt}</div>
-                    <div>수정일: {modifyAt}</div>
+                    <div>작성자: {detail?.writer}</div>
+                    <div>작성일: {detail?.createAt}</div>
+                    <div>수정일: {detail?.modifyAt}</div>
                     <div onClick={closeFunc}>X</div>
                 </section>
-                <Editor id={id} parent={parent} />
+                <Editor id={id} parent={detail?.type} />
             </div>
         </article>
     );
