@@ -15,7 +15,6 @@ export const InputController = ({ noticeId, value, isLast, currFocus }) => {
     const { handler } = useDebounce(500);
 
     const [open, setOpen] = useState(false);
-    const [isFocus, setIsFocus] = useState(false);
     const [type, setType] = useState(0);
 
     const _open = (e) => {
@@ -55,8 +54,29 @@ export const InputController = ({ noticeId, value, isLast, currFocus }) => {
         });
     };
 
+    const _onFocus = (e) => {
+        console.log("focus");
+        const { innerText } = e.currentTarget;
+        if (innerText?.length === 0) return;
+
+        const selection = window.getSelection();
+        const newRange = document.createRange();
+        newRange.selectNodeContents(e.currentTarget);
+        newRange.collapse(false);
+        selection?.removeAllRanges();
+        selection?.addRange(newRange);
+    };
+
     useEffect(() => {
-        if (isLast) focusRef.current.focus();
+        if (isLast) {
+            const selection = window.getSelection();
+            const newRange = document.createRange();
+            newRange.selectNodeContents(focusRef.current);
+            newRange.collapse(false);
+            selection?.removeAllRanges();
+            selection?.addRange(newRange);
+            focusRef.current.focus();
+        }
     }, [isLast]);
 
     return (
@@ -72,7 +92,6 @@ export const InputController = ({ noticeId, value, isLast, currFocus }) => {
                                     id={index}
                                     className="input_item"
                                     onClick={_changeType}
-                                    onFocus={(e) => {}}
                                 >
                                     {val}
                                 </li>
@@ -89,6 +108,7 @@ export const InputController = ({ noticeId, value, isLast, currFocus }) => {
                 suppressContentEditableWarning={true} //임시방편
                 onKeyDown={_onKeyDown}
                 onInput={_onInput}
+                onFocus={_onFocus}
                 placeholder="내용을 입력하세요."
             >
                 {value?.value || ""}
