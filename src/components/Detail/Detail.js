@@ -8,7 +8,7 @@ import { useDebounce } from "../../hooks/useDebounce";
 import { Editor } from "../editor/Editor";
 import { currnetDate } from "../../utils/date";
 
-export const Detail = ({ id, parent, closeFunc }) => {
+export const Detail = ({ id, closeFunc }) => {
     const dispatch = useDispatch();
     const { handler } = useDebounce(2000);
 
