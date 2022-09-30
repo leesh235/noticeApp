@@ -27,9 +27,7 @@ import { useState, useRef, useEffect } from "react";
  *      dragleave event (변경된 리스트가 영역 밖에서 드랍됐을때 적용되는 문제 방지)
  *      drop event (변경된 리스트를 dom에 적용)
  */
-export const useDnd = ({
-    initList = { todos: [], progress: [], completed: [] },
-}) => {
+export const useDnd = ({ initList }) => {
     const draggable = true; //draggable에 true 속성주기
     const [updateList, setUpdateList] = useState(initList);
 
@@ -38,11 +36,12 @@ export const useDnd = ({
         targetItem: null, //drop할 위치의 아이템
         dragParent: null, //drag한 아이템의 부모
         targetParent: null, //drop할 위치의 아이템의 부모
-        updateList: { todos: [], progress: [], completed: [] }, //순서 변경 data
+        updateList: initList, //순서 변경 data
     });
 
     //드래그가 시작될 때
     const onDragStart = (e) => {
+        console.log(e.currentTarget);
         dndItem.current.dragItem = e.currentTarget;
         dndItem.current.dragParent = e.currentTarget.parentElement;
         e.currentTarget.classList.add("grabbing");
@@ -50,6 +49,7 @@ export const useDnd = ({
 
     //드래그가 끝날 때
     const onDragEnd = (e) => {
+        console.log(e.currentTarget);
         dndItem.current.dragItem = null;
         dndItem.current.targetItem = null;
         dndItem.current.updateList = { todos: [], progress: [], completed: [] };
@@ -64,6 +64,7 @@ export const useDnd = ({
 
     //해당 위치에 드랍될 때
     const onDrop = (e) => {
+        console.log(e.currentTarget);
         if (
             dndItem.current.updateList[e.currentTarget.parentElement.id]
                 .length === 0
@@ -87,7 +88,7 @@ export const useDnd = ({
         const filterList = updateList[dragParent.id].filter(
             (val, idx) => idx !== dragItem
         );
-
+        console.log(updateList);
         //drag item과 drop 위치가 같은 list일 때
         if (targetParent === dragParent) {
             newList = {
@@ -120,16 +121,22 @@ export const useDnd = ({
                 ],
             };
         }
+        console.log(newList);
         dndItem.current.updateList = newList;
     };
 
     //드랍될 영역을 벗어났을 때
     const onDragLeave = (e) => {
+        console.log(e.currentTarget);
         //문제: 아이템의 margin이 0일때 drag item enter -> target item enter -> drag item leave 순으로 발생하여 updatelist가 반영되지않음
         dndItem.current.updateList = updateList;
     };
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+        setUpdateList(initList);
+    }, [initList]);
+
+    // useEffect(() => {}, [updateList]);
 
     return {
         updateList,
