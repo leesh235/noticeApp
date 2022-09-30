@@ -1,3 +1,16 @@
 #sideBar {
     width: 200px;
+    height: 100%;
+    list-style: none;
+    border: 1px solid gray;
+    border-radius: 8px;
+    padding: 10px 20px;
+}
+
+.side_menu {
+    cursor: pointer;
+}
+
+.side_menu > a {
+    text-decoration: none;
 }

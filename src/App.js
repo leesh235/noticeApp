@@ -6,13 +6,12 @@ import { SideBar } from "./components/sidebar/SideBar";
 
 export default function App() {
     return (
-        <>
+        <Router>
             <SideBar />
-            <Router>
-                <Routes>
-                    <Route path={routes.home} element={<Home />} />
-                </Routes>
-            </Router>
-        </>
+            <Routes>
+                <Route path={routes.home} element={<Home />} />
+                <Route path={routes.memo} element={<Home />} />
+            </Routes>
+        </Router>
     );
 }
